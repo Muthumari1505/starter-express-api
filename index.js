@@ -1,26 +1,31 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const axios = require('axios');
 const app = express();
-const PORT = 3900;
+const PORT = 6060;
 
-// Middleware to parse webhook body as JSON
+app.use(bodyParser.json());
 
-// Handle webhook POST request
 app.post('/webhook', async (req, res) => {
-  // Get ticket information from webhook body
-
-  // Send message to Zoho Cliq
-  try {
-    const response = await axios.post('https://cliq.zoho.com/api/v2/channelsbyname/buildtest/message?zapikey=1001.ddbb61d82fba2eb8de1f61ce073cc0c5.5d4eba8ac3c86965c3c59d4cc736755f', {
-      text: `build detail`,
-    });
-    console.log('Message sent to Zoho Cliq:', response.data);
-  } catch (error) {
-    console.error('Error sending message to Zoho Cliq:', error);
+  
+  // console.log(JSON.parse(JSON.stringify(req.body))[0].prevState,"subject");
+    
+  if(JSON.parse(JSON.stringify(req.body)) !== {} && JSON.parse(JSON.stringify(req.body))[0].prevState.createdBy === '119027000170853017'){
+    try {
+      const response = await axios.post('https://cliq.zoho.com/api/v2/channelsbyname/apitestingb/message?zapikey=1001.8690e3b26a53b3f3a879853428de4d3f.d6f77b0e08b607fe39a18273b241ae82', {
+        text: '```' + `QA Ticket ID:  #${JSON.parse(JSON.stringify(req.body))[0].prevState.ticketNumber}
+Subject: ${JSON.parse(JSON.stringify(req.body))[0].prevState.subject}
+RN: ${JSON.parse(JSON.stringify(req.body))[0].prevState.customFields["Release notes URL"]}` + '```'
+      });
+      console.log('Message sent to Zoho Cliq:');
+    } catch (error) {
+      console.error('Error sending message to Zoho Cliq:', error);
+    }
+     res.sendStatus(200);
   }
-
-  // Send response to webhook
-  res.sendStatus(200);
+  else{
+    res.sendStatus(200);
+  }
 });
 
 // Start server
