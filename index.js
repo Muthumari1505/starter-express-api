@@ -10,7 +10,7 @@ app.post('/webhook', async (req, res) => {
   
   // console.log(JSON.parse(JSON.stringify(req.body))[0].prevState,"subject");
     
-  if(JSON.parse(JSON.stringify(req.body)) !== {} && (JSON.parse(JSON.stringify(req.body))[0] ? JSON.parse(JSON.stringify(req.body))[0].prevState.createdBy === '119027000170853017':false)){
+  if(JSON.parse(JSON.stringify(req.body)) !== {} && (JSON.parse(JSON.stringify(req.body))[0] ? JSON.parse(JSON.stringify(req.body))[0].payload.createdBy === '119027000170853017':false)){
     try {
       const response = await axios.post('https://cliq.zoho.com/api/v2/channelsbyname/uibuildstoqa/message?zapikey=1001.ddbb61d82fba2eb8de1f61ce073cc0c5.5d4eba8ac3c86965c3c59d4cc736755f', {
         text: '```' + `QA Ticket ID:  #${JSON.parse(JSON.stringify(req.body))[0].prevState.ticketNumber}
